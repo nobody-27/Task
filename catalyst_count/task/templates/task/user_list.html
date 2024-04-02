@@ -1,0 +1,42 @@
+{% extends "task/base.html" %}
+{% block heading %}
+<h1>Users</h1>
+{% endblock heading %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="d-flex justify-content-between">
+        <!-- Flex items distributed evenly -->
+        <h3>Users</h3>
+        <div class="">
+            <a href="{% url 'add_user' %}" class="btn btn-primary">Add User</a>
+        </div>
+    </div>
+
+    <div class="row align-items-center">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{user.username|default_if_none:"N/A"}}</td>
+                    <td>{{user.email|default_if_none:"N/A"}}</td>
+                    <td>{{ user.is_active|default_if_none:"False" }}</td>
+                    <td>
+                        <a href="{% url 'edit_user' user.id %}">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+ {% endblock content %}

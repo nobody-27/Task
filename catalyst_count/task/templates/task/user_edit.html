@@ -1,0 +1,21 @@
+{% extends "task/base.html" %}
+{% block heading %}
+<h1>Add User</h1>
+{% endblock heading %}
+{% block content %}
+
+<h2>Edit User</h2>
+    <form action="{% url 'edit_user' user.id  %}" method="post"> {% csrf_token %}
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" value="{{user.username}}"  name="username"><br>
+        
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" value="{{user.email}}" name="email"><br>
+        
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+
+{% endblock content %}

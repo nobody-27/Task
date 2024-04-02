@@ -1,0 +1,22 @@
+{% extends "task/base.html" %}
+{% block heading %}
+<h1>Add User</h1>
+{% endblock heading %}
+
+{% block content %}
+
+<h2>Add User</h2>
+    <form action="{% url 'add_user' %}" method="post"> {% csrf_token %}
+        <label for="username">Username:</label><br>
+        <input type="text" id="username"  name="username"><br>
+        
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br>
+        
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+
+{% endblock content %}

@@ -1,0 +1,4 @@
+venv
+catalyst_count/data/
+catalyst_count/data/*
+catalyst_count/media/*

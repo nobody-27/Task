@@ -1,0 +1,146 @@
+{% extends "task/base.html" %}
+{% block heading %}
+<h1>Query Builder</h1>
+{% endblock heading %}
+
+{% block content %}
+
+
+
+<div id="loader" style="display: none;">Loading...</div>
+
+<div class="container mt-3">
+    <form>
+        <div class="row">
+            <h3>Query Builder</h3>
+            <div class="col-md-3 mt-2">
+                <input type="text" class="form-control" name="name" id="name" placeholder="Name">
+            </div>
+            <div class="col-md-3 mt-2">
+                <input type="text" class="form-control" name="industry" id="industry" placeholder="Industry">
+            </div>
+            <div class="col-md-3 mt-2">
+                <input type="number" class="form-control" name="year_founded" id="year_founded" placeholder="Year Founded">
+            </div>
+            <div class="col-md-3 mt-2">
+                <input type="text" class="form-control" placeholder="locality" name="locality" id="locality">
+            </div>
+
+            <div class="col-md-3 mt-2">
+                <input type="text" class="form-control" placeholder="Country" name="country" id="country">
+            </div>
+
+
+            <button type="button" class="btn btn-primary me-3" id="submit">Click Me!</button>
+        </div>
+    </form>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Industry</th>
+            <th>Year Founded</th>
+            <th>Locality</th>
+            <th>Country</th>
+        </tr>
+    </thead>
+    <tbody id="data-table-body">
+        <!-- Data will be inserted here dynamically -->
+    </tbody>
+</table>
+
+
+
+<script>
+
+function addOrUpdateURlParam(key, value) {
+    const searchParam = new URLSearchParams(window.location.search);
+    searchParam.set(key, value);
+    const newRelativePathQuery = window.location.pathname + "?" +
+        searchParam.toString();
+    history.pushState(null, "", newRelativePathQuery);
+}
+
+async function api_calling(){
+    const searchparams_new = new URLSearchParams(window.location.search);
+    const newurl = '/search/?' + searchparams_new
+    const response  = await fetch(newurl);
+    const jsonifiedResponse  = await response.json();
+    return jsonifiedResponse;
+}
+
+async function lead_filter(){
+    document.getElementById('loader').style.display = 'block';
+    loader.style.display = 'block';
+    const output = await api_calling();
+
+    displayDataInTable(output);
+    document.getElementById('loader').style.display = 'none';
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('submit').addEventListener('click', async function() {
+        var name = document.getElementById('name').value;
+        var industry = document.getElementById('industry').value;
+        var yearFounded = document.getElementById('year_founded').value;
+        var locality = document.getElementById('locality').value;
+        var country = document.getElementById('country').value;
+
+        var params = [
+            { key: 'name', value: name },
+            { key: 'industry', value: industry },
+            { key: 'year_founded', value: yearFounded },
+            { key: 'locality', value: locality },
+            { key: 'country', value: country },
+        ];
+        params.forEach(param => {
+            addOrUpdateURlParam(param.key, param.value);
+        });
+
+        const output = await lead_filter();
+        
+    });
+});
+
+function displayDataInTable(data) {
+    console.log(data)
+    var tableBody = document.getElementById('data-table-body');
+    tableBody.innerHTML = '';
+    
+    if (Array.isArray(data.message) && data.message.length > 0) {
+        data.message.forEach(function(item) {
+            var row = tableBody.insertRow();
+            row.insertCell().textContent = item.name;
+            row.insertCell().textContent = item.domain;
+            row.insertCell().textContent = item.year_founded;
+            row.insertCell().textContent = item.city;
+            row.insertCell().textContent = item.state;
+            row.insertCell().textContent = item.country;
+            row.insertCell().textContent = item.employees;
+        });
+    } else {
+        var row = tableBody.insertRow();
+        var cell = row.insertCell();
+        cell.setAttribute('colspan', '7');
+        cell.textContent = 'No records found';
+    }
+}
+</script>
+
+
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+       
+       
